@@ -239,6 +239,7 @@ Similar to `denote--creation-get-note-data-from-prompts'
                       (setq signature (denote-signature-prompt))))))
     (list url title keywords file-type directory date template signature)))
 
+;;;###autoload
 (defun denote-dired-bookmarks-create-bookmark (&optional url title keywords file-type directory date template signature)
   "Create a new Denote bookmark file for URL with TITLE.
 Optional KEYWORDS are additional Denote keywords besides the bookmark keyword."
@@ -251,6 +252,7 @@ Optional KEYWORDS are additional Denote keywords besides the bookmark keyword."
 
 (defalias 'ddb-create-bookmark 'denote-dired-bookmarks-create-bookmark)
 
+;;;###autoload
 (define-minor-mode denote-dired-bookmarks-mode
   "Minor mode to open Denote bookmark files as URLs in Dired."
   :lighter " DntBkmk"
