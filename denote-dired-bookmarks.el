@@ -251,7 +251,6 @@ Optional KEYWORDS are additional Denote keywords besides the bookmark keyword."
 
 (defalias 'ddb-create-bookmark 'denote-dired-bookmarks-create-bookmark)
 
-;;;###autoload
 (define-minor-mode denote-dired-bookmarks-mode
   "Minor mode to open Denote bookmark files as URLs in Dired."
   :lighter " DntBkmk"
