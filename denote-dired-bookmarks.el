@@ -239,6 +239,29 @@ Similar to `denote--creation-get-note-data-from-prompts'
                       (setq signature (denote-signature-prompt))))))
     (list url title keywords file-type directory date template signature)))
 
+(defun denote-dired-bookmarks--propertize-bookmarks ()
+  "Add tooltip properties to Denote bookmark files in the current Dired buffer."
+  (let ((inhibit-read-only t))  ;; Allow modification of read-only buffer
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (when (dired-file-name-at-point)
+          (let* ((file (dired-get-filename nil t))
+                 (url nil))
+            (when (and file (denote-dired-bookmarks-file-p file))
+              (setq url (denote-dired-bookmarks-extract-url file))
+              (when url
+                (let ((beg (line-beginning-position))
+                      (end (line-end-position)))
+                  (add-text-properties beg end
+                                       `(help-echo ,(format "URL: %s" url))))))))
+        (forward-line 1)))))
+
+(defun denote-dired-bookmarks--after-readin ()
+  "Function to run after Dired reads a directory."
+  (when denote-dired-bookmarks-mode
+    (denote-dired-bookmarks--propertize-bookmarks)))
+
 ;;;###autoload
 (defun denote-dired-bookmarks-create-bookmark (&optional url title keywords file-type directory date template signature)
   "Create a new Denote bookmark file for URL with TITLE.
@@ -260,7 +283,10 @@ Optional KEYWORDS are additional Denote keywords besides the bookmark keyword."
   (if denote-dired-bookmarks-mode
       (progn
         (advice-add 'dired-find-file :around #'denote-dired-bookmarks-find-file-advice)
-        (advice-add 'dired-mouse-find-file-other-window :around #'denote-dired-bookmarks-mouse-find-file-advice))
+        (advice-add 'dired-mouse-find-file-other-window :around #'denote-dired-bookmarks-mouse-find-file-advice)
+        (add-hook 'dired-after-readin-hook #'denote-dired-bookmarks--after-readin nil t)
+        (when (eq major-mode 'dired-mode)
+          (denote-dired-bookmarks--propertize-bookmarks)))
     (advice-remove 'dired-find-file #'denote-dired-bookmarks-find-file-advice)))
 
 (provide 'denote-dired-bookmarks)
