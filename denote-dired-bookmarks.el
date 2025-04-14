@@ -91,6 +91,8 @@
 (require 'denote)
 (require 'dired)
 
+(defvar denote-dired-bookmarks-mode nil "To resolve a compilation warning regarding reference to free variable.")
+
 (defgroup denote-dired-bookmarks nil
   "Web bookmark support for Denote files in Dired."
   :group 'denote
@@ -267,11 +269,11 @@ Similar to `denote--creation-get-note-data-from-prompts'
   "Create a new Denote bookmark file for URL with TITLE.
 Optional KEYWORDS are additional Denote keywords besides the bookmark keyword."
   (interactive (denote-dired-bookmarks--creation-get-data-from-prompts))
-  (let ((orig-buffer (current-buffer))
-        (note-path (denote title keywords file-type directory date template signature)))
-      (insert url)
-      (save-buffer)
-      (switch-to-buffer orig-buffer)))
+  (let ((orig-buffer (current-buffer)))
+    (denote title keywords file-type directory date template signature)
+    (insert url)
+    (save-buffer)
+    (switch-to-buffer orig-buffer)))
 
 (defalias 'ddb-create-bookmark 'denote-dired-bookmarks-create-bookmark)
 
