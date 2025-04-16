@@ -220,15 +220,13 @@ Similar to `denote--creation-get-note-data-from-prompts'
       (setq url (read-string (format-prompt "URL" default-url) nil nil default-url)))
     (dolist (prompt denote-prompts)
       (pcase prompt
-        ('title (unless denote-use-title
-                  (setq title (denote-title-prompt
-                               (when (and (not denote-ignore-region-in-denote-command)
-                                          (use-region-p))
-                                 (buffer-substring-no-properties
-                                  (region-beginning)
-                                  (region-end)))))))
-        ('keywords (unless denote-use-keywords
-                     (setq keywords (cons denote-dired-bookmarks-keyword (denote-keywords-prompt)))))
+        ('title (setq title (denote-title-prompt
+                             (when (and (not denote-ignore-region-in-denote-command)
+                                        (use-region-p))
+                               (buffer-substring-no-properties
+                                (region-beginning)
+                                (region-end))))))
+        ('keywords (setq keywords (cons denote-dired-bookmarks-keyword (denote-keywords-prompt))))
         ('file-type (unless denote-use-file-type
                       (setq file-type (denote-file-type-prompt))))
         ('subdirectory (unless denote-use-directory
