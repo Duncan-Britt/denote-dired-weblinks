@@ -29,7 +29,7 @@
 ;; │ Summary │
 ;; └─────────┘
 ;; This package extends Dired to support web bookmarks as specialized
-;; Denote files. When `denote-dired-bookmarks-mode' is enabled, Denote
+;; Denote files.  When `denote-dired-bookmarks-mode' is enabled, Denote
 ;; files with the "bookmark" keyword are treated specially in Dired:
 ;; by default, clicking or pressing RET on these files opens the URL
 ;; contained within them in your browser, rather than opening the file
@@ -42,13 +42,13 @@
 ;; └────────────┘
 ;; The venerable `denote' Emacs package provides an excellent way to
 ;; organize and navigate notes on your filesystem such that you can
-;; find what you need when you need it. But the challenge of
+;; find what you need when you need it.  But the challenge of
 ;; organizing information such that you may easily retrieve the
 ;; relevant information when you want applies to more than just your
-;; personal notes on your file system. For example, maybe you
+;; personal notes on your file system.  For example, maybe you
 ;; bookmarked an obscure blog post detailing instructions for cooking
 ;; Bún bò Huế the traditional Vietnamese way, that you think would be
-;; fun to try... someday. But what are the odds you will remember to
+;; fun to try... someday.  But what are the odds you will remember to
 ;; look for it and find it when someday comes?
 ;;
 ;; The `denote' system of organizing information via metadata offers a
@@ -56,7 +56,7 @@
 ;; every web bookmark, some users may like having one workflow for
 ;; accessing information whether it is stored locally or remotely.
 ;; This package aims to make it convenient by treating denote files in
-;; dired with the user-defined "bookmark" keyword as actionable urls,
+;; Dired with the user-defined "bookmark" keyword as actionable urls,
 ;; relieving the need to manually visit the bookmark file, copy the
 ;; url, open a browser tab, and paste it in.  It also provides a
 ;; command for creating said bookmark files from a url in the
@@ -66,8 +66,8 @@
 ;; │ Example Installations │
 ;; └───────────────────────┘
 ;; To use the default settings and create a keybinding for creating
-;; bookmarks. By default, clicking on or pressing enter with the point
-;; on a bookmark file in dired will open the link.
+;; bookmarks.  By default, clicking on or pressing enter with the point
+;; on a bookmark file in Dired will open the link.
 ;; (use-package denote-dired-bookmarks
 ;;   :ensure t
 ;;   :hook (dired-mode . denote-dired-bookmarks-mode)
@@ -76,15 +76,15 @@
 ;; variables `denote-dired-bookmarks-open-link-on-dired-find-file'
 ;; and `denote-dired-bookmarks-open-link-on-dired-mouse-find-file'.
 ;; The following example does this and creates an alternate
-;; keybinding with which to open bookmark links in dired.
+;; keybinding with which to open bookmark links in Dired.
 ;; (use-package denote-dired-bookmarks
 ;;   :ensure t
 ;;   :hook (dired-mode . denote-dired-bookmarks-mode)
 ;;   :custom
 ;;   (denote-dired-bookmarks-open-link-on-dired-find-file nil)
 ;;   (denote-dired-bookmarks-open-link-on-dired-mouse-find-file nil)
-;;   :bind (("C-c C-o" . ddb-open-link)
-;;          ("s-b" . ddb-create-bookmark)))
+;;   :bind (("C-c C-o" . denote-dired-bookmarks-open-link)
+;;          ("s-b" . denote-dired-bookmarks-create-bookmark)))
 
 ;;; Code:
 
@@ -104,14 +104,12 @@
   :group 'denote-dired-bookmarks)
 
 (defcustom denote-dired-bookmarks-open-link-on-dired-find-file t
-  "Determines whether the open file action in dired buffers
-will trigger the link to be opened in a web browser instead."
+  "When non-nil, open bookmark links in browser when using `dired-find-file'."
   :type 'boolean
   :group 'denote-dired-bookmarks)
 
 (defcustom denote-dired-bookmarks-open-link-on-dired-mouse-find-file t
-  "Determines whether the open file action in dired buffers
-will trigger the link to be opened in a web browser instead."
+  "When non-nil, open bookmark links in browser on click."
   :type 'boolean
   :group 'denote-dired-bookmarks)
 
@@ -122,9 +120,9 @@ will trigger the link to be opened in a web browser instead."
                (denote-extract-keywords-from-path file))))
 
 (defun denote-dired-bookmarks--forward-frontmatter (&optional file)
-  "Move point forward past frontmatter in current buffer or FILE if provided.
-When called interactively or with FILE, insert file contents into a temp buffer.
-Return the point position after frontmatter."
+  "Move point forward past frontmatter in FILE or current buffer.
+When called interactively or with FILE, insert file contents into
+a temp buffer.  Return the point position after frontmatter."
   (interactive "fFile: ")
   (when (called-interactively-p 'any)
     (let ((content (with-temp-buffer
@@ -180,16 +178,15 @@ Return the point position after frontmatter."
         nil))))
 
 (defun denote-dired-bookmarks-open-link (file)
+  "Open link after frontmatter in FILE."
   (interactive (list (dired-get-file-for-visit)))
   (if (denote-dired-bookmarks-file-p file)
       (let ((url (denote-dired-bookmarks-extract-url file)))
         (browse-url url))
     (if (called-interactively-p 'interactive)
-        (user-error "Failed to open bookmark at point: No bookmark file at point.")
-      (message "Error: denote-dired-bookmarks-open-link called with non-bookmark file."))
+        (user-error "Failed to open bookmark at point: No bookmark file at point")
+      (message "Error: denote-dired-bookmarks-open-link called with non-bookmark file"))
     nil))
-
-(defalias 'ddb-open-link 'denote-dired-bookmarks-open-link)
 
 (defun denote-dired-bookmarks-find-file-advice (orig-fun &rest args)
   "Advice around `dired-find-file' to handle Denote bookmark files.
@@ -210,11 +207,10 @@ ORIG-FUN is the original function and ARGS are its arguments."
     (apply orig-fun args)))
 
 (defun denote-dired-bookmarks--creation-get-data-from-prompts ()
-  "Retrieves denote data for the creation of a new note
-with the addition of the URL to link to.
+  "Get Denote data and URL to make a new note.
 
 Similar to `denote--creation-get-note-data-from-prompts'
-(denote version 3.1.0)."
+\(denote version 3.1.0)."
   (let (url title keywords file-type directory date template signature)
     (let ((default-url (current-kill 0)))
       (setq url (read-string (format-prompt "URL" default-url) nil nil default-url)))
@@ -258,22 +254,24 @@ Similar to `denote--creation-get-note-data-from-prompts'
         (forward-line 1)))))
 
 (defun denote-dired-bookmarks--after-readin ()
-  "Function to run after Dired reads a directory."
+  "Update Dired buffer after readin."
   (when denote-dired-bookmarks-mode
     (denote-dired-bookmarks--propertize-bookmarks)))
 
 ;;;###autoload
 (defun denote-dired-bookmarks-create-bookmark (&optional url title keywords file-type directory date template signature)
   "Create a new Denote bookmark file for URL with TITLE.
-Optional KEYWORDS are additional Denote keywords besides the bookmark keyword."
+Optional KEYWORDS are additional Denote keywords besides the
+bookmark keyword.
+
+See `denote' command documentation for information about
+FILE-TYPE, DIRECTORY, DATE, TEMPLATE and SIGNATURE."
   (interactive (denote-dired-bookmarks--creation-get-data-from-prompts))
   (let ((orig-buffer (current-buffer)))
     (denote title keywords file-type directory date template signature)
     (insert url)
     (save-buffer)
     (switch-to-buffer orig-buffer)))
-
-(defalias 'ddb-create-bookmark 'denote-dired-bookmarks-create-bookmark)
 
 ;;;###autoload
 (define-minor-mode denote-dired-bookmarks-mode
