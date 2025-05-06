@@ -1,36 +1,35 @@
-#+title: Denote Dired Bookmarks
+#+title: Denote Dired Web-links
 #+author: Duncan Britt
 #+date: <2025-04-14>
 #+options: toc:nil
 
 * Summary
-This package extends =Dired= to support web bookmarks as specialized [[Https://Protesilaos.Com/Emacs/Denote][Denote]] files. When ~denote-dired-bookmarks-mode~ is enabled, [[Https://Protesilaos.Com/Emacs/Denote][Denote]] files with the "bookmark" keyword are treated specially in =Dired=: by default, clicking or pressing RET on these files opens the URL contained within them in your browser, rather than opening the file itself.  This behavior can be customized through variables, and the package also provides ~ddb-create-bookmark~ to easily create bookmark files from URLs in your clipboard or entered manually.
+This package extends =Dired= to support web bookmarks as specialized [[Https://Protesilaos.Com/Emacs/Denote][Denote]] files. When ~denote-dired-weblinks-mode~ is enabled, [[Https://Protesilaos.Com/Emacs/Denote][Denote]] files with the "bookmark" keyword are treated specially in =Dired=: by default, clicking or pressing RET on these files opens the URL contained within them in your browser, rather than opening the file itself.  This behavior can be customized through variables, and the package also provides ~ddb-create-bookmark~ to easily create bookmark files from URLs in your clipboard or entered manually.
 
 * TODO Demo
 
-
 * Motivation
-The venerable [[https://protesilaos.com/emacs/denote][Denote]] Emacs package provides an excellent way to organize and navigate notes on your file system such that you can find what you need when you need it. But the challenge of organizing information such that you may easily retrieve the relevant information when you want applies to more than just your personal notes on your file system. For example, maybe you bookmarked an obscure blog post detailing instructions for cooking Bún bò Huế the traditional Vietnamese way, that you think would be fun to try\dots someday. But what are the odds you will remember to look for it and find it when someday comes?
+The venerable [[https://protesilaos.com/emacs/denote][Denote]] Emacs package provides an excellent way to organize and navigate notes on your file system such that you can find what you need when you need it. But the challenge of organizing information such that you may easily retrieve the relevant information when you want applies to more than just your personal notes on your file system.
 
 The [[https://protesilaos.com/emacs/denote][Denote]] system of organizing information via metadata offers a solution, and while it might seem cumbersome to create a file for every web bookmark, some users may like having one workflow for accessing information whether it is stored locally or remotely. This package aims to make it convenient by treating [[https://protesilaos.com/emacs/denote][Denote]] files in =Dired= with the user-defined "bookmark" keyword as actionable URLs, relieving the need to manually visit the bookmark file, copy the URL, open a browser tab, and paste it in.  It also provides a command for creating said bookmark files from a URL in the clipboard or entered in the minibuffer. 
 
 * Example Installations
 To use the default settings and create a keybinding for creating bookmarks. By default, clicking on or pressing enter with the point on a bookmark file in =Dired= will open the link.
 #+begin_src emacs-lisp
-  (use-package denote-dired-bookmarks
+  (use-package denote-dired-weblinks
     :ensure t
-    :hook (dired-mode . denote-dired-bookmarks-mode)
+    :hook (dired-mode . denote-dired-weblinks-mode)
     :bind (("s-b" . ddb-create-bookmark)))
 #+end_src
 
-To disable the shadowing of the open file behavior, set custom  variables `denote-dired-bookmarks-open-link-on-dired-find-file'   and `denote-dired-bookmarks-open-link-on-dired-mouse-find-file'.  The following example does this and creates an alternate  keybinding with which to open bookmark links in dired.
+To disable the shadowing of the open file behavior, set custom  variables `denote-dired-weblinks-open-link-on-dired-find-file'   and `denote-dired-weblinks-open-link-on-dired-mouse-find-file'.  The following example does this and creates an alternate  keybinding with which to open bookmark links in dired.
 #+begin_src emacs-lisp
-  (use-package denote-dired-bookmarks
+  (use-package denote-dired-weblinks
     :ensure t
-    :hook (dired-mode . denote-dired-bookmarks-mode)
+    :hook (dired-mode . denote-dired-weblinks-mode)
     :custom
-    (denote-dired-bookmarks-open-link-on-dired-find-file nil)
-    (denote-dired-bookmarks-open-link-on-dired-mouse-find-file nil)
+    (denote-dired-weblinks-open-link-on-dired-find-file nil)
+    (denote-dired-weblinks-open-link-on-dired-mouse-find-file nil)
     :bind (("C-c C-o" . ddb-open-link)
            ("s-b" . ddb-create-bookmark)))
 #+end_src
