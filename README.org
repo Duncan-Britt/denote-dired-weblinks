@@ -19,7 +19,7 @@ To use the default settings and create a keybinding for creating bookmarks. By d
   (use-package denote-dired-weblinks
     :ensure t
     :hook (dired-mode . denote-dired-weblinks-mode)
-    :bind (("s-b" . ddb-create-bookmark)))
+    :bind (("s-b" . denote-dired-weblinks-create-bookmark)))
 #+end_src
 
 To disable the shadowing of the open file behavior, set custom  variables `denote-dired-weblinks-open-link-on-dired-find-file'   and `denote-dired-weblinks-open-link-on-dired-mouse-find-file'.  The following example does this and creates an alternate  keybinding with which to open bookmark links in dired.
@@ -30,6 +30,6 @@ To disable the shadowing of the open file behavior, set custom  variables `denot
     :custom
     (denote-dired-weblinks-open-link-on-dired-find-file nil)
     (denote-dired-weblinks-open-link-on-dired-mouse-find-file nil)
-    :bind (("C-c C-o" . ddb-open-link)
-           ("s-b" . ddb-create-bookmark)))
+    :bind (("C-c C-o" . denote-dired-weblinks-open-link)
+           ("s-b" . denote-dired-weblinks-create-bookmark)))
 #+end_src

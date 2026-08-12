@@ -67,7 +67,7 @@
 ;; (use-package denote-dired-weblinks
 ;;   :ensure t
 ;;   :hook (dired-mode . denote-dired-weblinks-mode)
-;;   :bind (("s-b" . ddb-create-bookmark)))
+;;   :bind (("s-b" . denote-dired-weblinks-create-bookmark)))
 ;; To disable the shadowing of the open file behavior, set custom
 ;; variables `denote-dired-weblinks-open-link-on-dired-find-file'
 ;; and `denote-dired-weblinks-open-link-on-dired-mouse-find-file'.
